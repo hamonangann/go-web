@@ -2,29 +2,35 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
+	"path"
 )
 
-func handlerIndex(w http.ResponseWriter, r *http.Request) {
-	message := "Welcome"
-	w.Write([]byte(message))
-}
-
-func handlerHello(w http.ResponseWriter, r *http.Request) {
-	message := "Hello world!"
-	w.Write([]byte(message))
-}
-
 func main() {
-	http.HandleFunc("/", handlerIndex)
-	http.HandleFunc("/index", handlerIndex)
-	http.HandleFunc("/hello", handlerHello)
+	http.Handle("/static/",
+		http.StripPrefix("/static/",
+			http.FileServer(http.Dir("assets"))))
 
-	address := "localhost:9000"
-	fmt.Printf("Server started at %s\n", address)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		filepath := path.Join("views", "index.html")
+		tmpl, err := template.ParseFiles(filepath)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-	err := http.ListenAndServe(address, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
+		data := map[string]any{
+			"title": "Simple Golang Web",
+			"name":  "Nito",
+		}
+
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	})
+
+	fmt.Println("server started at localhost:9000")
+	http.ListenAndServe(":9000", nil)
 }
