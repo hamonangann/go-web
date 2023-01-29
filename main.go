@@ -4,28 +4,32 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"path"
 )
 
-func main() {
-	http.Handle("/static/",
-		http.StripPrefix("/static/",
-			http.FileServer(http.Dir("assets"))))
+type M map[string]any
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		filepath := path.Join("views", "index.html")
-		tmpl, err := template.ParseFiles(filepath)
+func main() {
+	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
+		data := M{"name": "nito"}
+		tmpl := template.Must(template.ParseFiles(
+			"views/index.html",
+			"views/_header.html",
+			"views/_message.html",
+		))
+		err := tmpl.ExecuteTemplate(w, "index", data)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
 		}
+	})
 
-		data := map[string]any{
-			"title": "Simple Golang Web",
-			"name":  "Nito",
-		}
-
-		err = tmpl.Execute(w, data)
+	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+		data := M{"name": "nito"}
+		tmpl := template.Must(template.ParseFiles(
+			"views/about.html",
+			"views/_header.html",
+			"views/_message.html",
+		))
+		err := tmpl.ExecuteTemplate(w, "about", data)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
