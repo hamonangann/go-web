@@ -6,11 +6,13 @@ import (
 	"net/http"
 )
 
-type M map[string]any
+type Person struct {
+	Name string
+}
 
 func main() {
 	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
-		data := M{"name": "nito"}
+		data := Person{Name: "nito"}
 		tmpl := template.Must(template.ParseFiles(
 			"views/index.html",
 			"views/_header.html",
@@ -23,7 +25,7 @@ func main() {
 	})
 
 	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
-		data := M{"name": "nito"}
+		data := Person{Name: "nito"}
 		tmpl := template.Must(template.ParseFiles(
 			"views/about.html",
 			"views/_header.html",
