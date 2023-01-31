@@ -1,12 +1,11 @@
 {{define "_message"}}
 
-{{/* message template */}}
 {{$name := .Name}}
 
 {{if eq $name "nito"}}
-<h1>Welcome Nito!</h1>
+    <h1>Welcome Nito!</h1>
 {{else}}
-<h1>Welcome, {{$name}}</h1>
+    <h1>Welcome, {{$name}}</h1>
 {{end}}
 
 {{end}}
