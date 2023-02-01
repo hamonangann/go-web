@@ -13,7 +13,7 @@ type Person struct {
 
 func main() {
 	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
-		data := Person{Name: "abdul"}
+		data := Person{Name: "abdulbari"}
 		tmpl := template.Must(template.ParseFiles(
 			"views/index.html",
 			"views/_header.html",
