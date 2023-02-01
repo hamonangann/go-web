@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -12,7 +13,7 @@ type Person struct {
 
 func main() {
 	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
-		data := Person{Name: "nito"}
+		data := Person{Name: "abdul"}
 		tmpl := template.Must(template.ParseFiles(
 			"views/index.html",
 			"views/_header.html",
@@ -20,7 +21,8 @@ func main() {
 		))
 		err := tmpl.ExecuteTemplate(w, "index", data)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Print(err.Error())
+			//http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	})
 
